@@ -140,29 +140,6 @@ section, .section {
     border-bottom: 1px solid var(--accent); 
 }
 
-/* Mobile Optimization for Navigation */
-@media screen and (max-width: 600px) {
-    nav {
-        padding: 10px 5px; /* Reduce side padding */
-    }
-
-    .nav-links {
-        display: flex;
-        gap: 8px; /* Tighten the gap between Home, Services, Portfolio */
-        font-size: 12px; /* Smaller font for portrait mobile */
-    }
-
-    .logo {
-        font-size: 18px; /* Slightly smaller logo for more room */
-    }
-
-    /* If you want to hide specific non-essential links on mobile portrait */
-    .nav-links a:nth-child(4), 
-    .nav-links a:nth-child(5) {
-        display: none; 
-    }
-}
-
 /* --- 4. HERO SECTION --- */
 .hero {
     height: calc(100vh - 80px); /* Adjust for navbar height */
@@ -488,4 +465,27 @@ input, select, textarea {
     0% { opacity: 0.5; }
     50% { opacity: 1; }
     100% { opacity: 0.5; }
+}
+
+/* Mobile Optimization for Navigation */
+@media screen and (max-width: 600px) {
+    nav {
+        padding: 10px 5px; /* Reduce side padding */
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 8px; /* Tighten the gap between Home, Services, Portfolio */
+        font-size: 12px; /* Smaller font for portrait mobile */
+    }
+
+    .logo {
+        font-size: 18px; /* Slightly smaller logo for more room */
+    }
+
+    /* If you want to hide specific non-essential links on mobile portrait */
+    .nav-links a:nth-child(4), 
+    .nav-links a:nth-child(5) {
+        display: none; 
+    }
 }
