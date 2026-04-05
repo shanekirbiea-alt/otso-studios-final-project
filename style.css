@@ -6,24 +6,43 @@
     --text: #333;
 }
 
-/* --- Preloader Styles --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    background-color: var(--bg); 
+    color: var(--primary); 
+    font-family: 'Montserrat', sans-serif; 
+    line-height: 1.8;
+    overflow-x: hidden;
+    padding-top: 80px; 
+}
+
+body.loading {
+    overflow: hidden;
+}
+
+/* --- PRELOADER --- */
 #loader {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--primary); /* Deep Charcoal #1A1A1A */
+    background-color: var(--primary);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1); /* Cinematic slide */
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .loader-content {
     text-align: center;
-    color: var(--bg); /* Gallery White #FBFBFB */
+    color: var(--bg);
 }
 
 .loader-logo {
@@ -39,49 +58,17 @@
 .loader-line {
     width: 0;
     height: 2px;
-    background-color: var(--accent); /* Muted Gold #C5A059 */
+    background-color: var(--accent);
     margin: 0 auto;
     animation: growLine 1s forwards 0.3s;
 }
 
-/* Slide Up Effect when finished */
 #loader.loaded {
     transform: translateY(-100%);
 }
 
-/* Animations */
-@keyframes revealText {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes growLine {
-    to {
-        width: 100px;
-    }
-}
-
-/* Prevent scrolling while loading */
-body.loading {
-    overflow: hidden;
-}
-
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-}
-
-body { 
-    background-color: var(--bg); 
-    color: var(--primary); 
-    font-family: 'Montserrat', sans-serif; 
-    line-height: 1.8;
-    overflow-x: hidden;
-    padding-top: 80px; /* Fix: Space for the fixed navbar */
-}
+@keyframes revealText { to { opacity: 1; transform: translateY(0); } }
+@keyframes growLine { to { width: 100px; } }
 
 /* --- 2. TYPOGRAPHY & LAYOUT --- */
 h1, h2, h3, .logo { 
@@ -89,9 +76,8 @@ h1, h2, h3, .logo {
     font-weight: 700; 
 }
 
-/* Global Section Spacing (Fixes "No Top Spacing") */
 section, .section {
-    padding: 100px 5% !important; /* Fix: Standardizes breathing room for all titles */
+    padding: 100px 5% !important;
     clear: both;
 }
 
@@ -114,7 +100,7 @@ section, .section {
     padding: 1rem 5%;
     background: #1a1a1a;
     color: #fff;
-    position: fixed; /* Keep fixed to top */
+    position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
@@ -142,7 +128,7 @@ section, .section {
 
 /* --- 4. HERO SECTION --- */
 .hero {
-    height: calc(100vh - 80px); /* Adjust for navbar height */
+    height: calc(100vh - 80px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -165,7 +151,7 @@ section, .section {
     color: var(--accent);
 }
 
-/* --- 5. SERVICES & EDITORIAL --- */
+/* --- 5. SERVICES --- */
 .services-editorial-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -223,29 +209,9 @@ section, .section {
 }
 
 /* --- 6. PORTFOLIO GRID --- */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 15px;
-}
-
-.portfolio-item { 
-    background: #eee; 
-    aspect-ratio: 4/5; 
-    overflow: hidden; 
-}
-
-.portfolio-item img, .portfolio-item video { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    transition: transform 0.8s ease; 
-}
-
-/* Work Gallery Grid */
 .work-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns like the inspiration */
+    grid-template-columns: repeat(2, 1fr);
     gap: 40px;
     margin-top: 50px;
 }
@@ -256,18 +222,11 @@ section, .section {
     background: #f0f0f0;
 }
 
-/* Creating the staggered effect */
-.work-item.tall {
-    grid-row: span 2;
-}
+.work-item.tall { grid-row: span 2; }
 
-.work-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
+.work-image-wrapper { position: relative; width: 100%; height: 100%; }
 
-.work-item img {
+.work-item img, .work-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -275,7 +234,6 @@ section, .section {
     transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Text Overlay that appears on hover */
 .work-overlay {
     position: absolute;
     bottom: 0;
@@ -297,132 +255,55 @@ section, .section {
     color: var(--accent);
 }
 
-.work-overlay h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    margin-top: 10px;
-}
+.work-overlay h3 { font-size: 1.8rem; margin-top: 10px; }
 
-/* Hover States */
-.work-item:hover img {
-    transform: scale(1.05);
-}
+.work-item:hover img, .work-item:hover video { transform: scale(1.05); }
+.work-item:hover .work-overlay { opacity: 1; transform: translateY(0); }
 
-.work-item:hover .work-overlay {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Responsive Fix */
-@media (max-width: 768px) {
-    .work-grid {
-        grid-template-columns: 1fr; /* Stack on mobile */
-        gap: 20px;
-    }
-    .work-item.tall {
-        grid-row: span 1;
-    }
-}
-
-.portfolio-item:hover img { 
-    transform: scale(1.05); 
-}
-
-/* Make looping videos fit perfectly in the grid */
-.work-item video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the video fills the 'tall' or 'standard' slot */
-    display: block;
-}
-
-/* Ensure the overlay still works on top of the video */
-.work-item.video-item .work-image-wrapper {
-    height: 100%;
-}
-
-/* --- FAQ Section Styling (Screenshot Match) --- */
+/* --- 7. FAQ SECTION --- */
 #faq {
-    background-color: var(--primary) !important; /* Fix: Deep Charcoal Background */
-    color: var(--bg) !important; /* Fix: Gallery White Text */
-    padding: 120px 5% !important; /* Adjust padding for better section breakup */
+    background-color: var(--primary) !important;
+    color: var(--bg) !important;
+    padding: 120px 5% !important;
 }
 
-/* Category Title styling */
 .faq-category-title {
-    color: var(--accent); /* Muted Gold #C5A059 */
+    color: var(--accent);
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 25px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #333; /* Fix: Thin Dark Horizontal Line */
-    text-align: left; /* Aligns left as per screenshot */
+    border-bottom: 1px solid #333;
+    text-align: left;
 }
 
-/* Question styling */
 summary {
     font-family: 'Playfair Display', serif;
     font-size: 1.3rem;
     cursor: pointer;
-    list-style: none; /* Removes default arrow */
+    list-style: none;
     position: relative;
     padding-right: 30px;
 }
 
-/* Custom '+' and '-' arrows for high-end look */
-summary::after {
-    content: '+';
-    position: absolute;
-    right: 0;
-    color: var(--accent);
-    font-family: 'Montserrat', sans-serif;
-}
+summary::after { content: '+'; position: absolute; right: 0; color: var(--accent); }
+details[open] summary::after { content: '−'; }
 
-details[open] summary::after {
-    content: '−';
-}
+details { border-bottom: 1px solid #333; padding: 20px 0; transition: all 0.3s ease; }
+details:hover { padding-left: 10px; }
+details p { color: #bcbcbc; font-size: 0.95rem; padding-top: 20px; }
+details strong { color: var(--bg); }
 
-/* Line separating individual questions */
-details {
-    border-bottom: 1px solid #333; /* Fix: Thin Dark Horizontal Line */
-    padding: 20px 0;
-    transition: all 0.3s ease;
-}
-
-details:hover {
-    padding-left: 10px;
-}
-
-/* Answers text styling */
-details p {
-    font-family: 'Montserrat', sans-serif;
-    color: #bcbcbc; /* Lighter grey for answer body */
-    font-size: 0.95rem;
-    padding-top: 20px;
-    line-height: 1.8;
-}
-
-/* Bold text inside the answers */
-details strong {
-    color: var(--bg);
-}
-
-/* --- 8. CLIENT REVIEWS --- */
+/* --- 8. REVIEWS --- */
 .reviews-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
 }
 
-.review-card {
-    padding: 30px;
-    border: 1px solid #eee;
-    background: #fff;
-    transition: transform 0.3s ease;
-}
-
+.review-card { padding: 30px; border: 1px solid #eee; background: #fff; }
 .stars { color: var(--accent); margin-bottom: 15px; }
 
 /* --- 9. FORMS & BUTTONS --- */
@@ -432,14 +313,9 @@ input, select, textarea {
     border: 1px solid #ddd;
     background-color: #fff;
     font-family: 'Montserrat', sans-serif;
-    outline: none;
 }
 
-.form-group-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-}
+.form-group-row { display: flex; gap: 20px; margin-bottom: 20px; }
 
 .btn-primary {
     background: var(--accent);
@@ -449,10 +325,11 @@ input, select, textarea {
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    min-width: 250px;
 }
 
 /* --- 10. RESPONSIVE DESIGN --- */
+
+/* Tablet Optimization */
 @media (max-width: 900px) {
     .services-editorial-grid, .form-group-row {
         grid-template-columns: 1fr;
@@ -461,59 +338,40 @@ input, select, textarea {
     section { padding: 60px 5% !important; }
 }
 
-@keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-/* FORCE REPAIR FOR PORTRAIT MOBILE */
-@media screen and (max-width: 480px) {
-    header, nav {
-        flex-direction: column !important; /* Stack logo and links vertically */
+/* Portrait Mobile Optimization (Fixes Nav Overlap) */
+@media screen and (max-width: 600px) {
+    .navbar {
+        flex-direction: column !important;
         height: auto !important;
         padding: 15px 0 !important;
         text-align: center;
     }
 
-    .nav-links {
-        margin-top: 10px;
-        display: flex;
-        flex-wrap: wrap; /* Let them wrap to a second line if needed */
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .nav-links a {
-        font-size: 13px;
-        padding: 5px 8px;
-    }
-
-    /* Hide specific links that crowd the screen (like FAQ or Services) */
-    .nav-links a[href="#faq"], 
-    .nav-links a[href="#services"] {
-        display: none;
-    }
-
     .logo {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
-}
 
-@media screen and (max-width: 600px) {
     .nav-links {
         display: flex !important;
-        flex-wrap: wrap !important; /* This allows FAQ to drop to a new line if needed */
+        flex-wrap: wrap !important; /* Forces links to a new line if they don't fit */
         justify-content: center !important;
         gap: 12px !important;
-        padding: 10px 0 !important;
+        padding: 0 10px !important;
+        width: 100%;
     }
-
-    /* REMOVE OR DELETE THE LINE BELOW IF YOU HAVE IT: */
-    /* .nav-links a[href="#faq"] { display: none; } */
 
     .nav-links a {
         font-size: 12px !important;
-        white-space: nowrap; /* Prevents words like 'Book Now' from splitting */
+        padding: 5px !important;
+        display: inline-block !important; /* Ensures FAQ is visible */
+        visibility: visible !important;
+        opacity: 1 !important;
     }
+
+    .work-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .work-item.tall { grid-row: span 1; }
 }
