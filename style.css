@@ -501,25 +501,19 @@ input, select, textarea {
 }
 
 @media screen and (max-width: 600px) {
-    .navbar {
-        flex-direction: column !important; /* Stack logo on top of links */
-        padding: 15px 0 !important;
-        height: auto !important;
-    }
-
     .nav-links {
-        width: 100%;
+        display: flex !important;
+        flex-wrap: wrap !important; /* This allows FAQ to drop to a new line if needed */
         justify-content: center !important;
-        padding: 10px 0;
-        gap: 10px !important;
+        gap: 12px !important;
+        padding: 10px 0 !important;
     }
 
-    .nav-links li a {
-        font-size: 11px !important; /* Make text smaller to fit */
-        padding: 5px !important;
-    }
+    /* REMOVE OR DELETE THE LINE BELOW IF YOU HAVE IT: */
+    /* .nav-links a[href="#faq"] { display: none; } */
 
-    .nav-cta {
-        margin-bottom: 10px; /* Space out the Book Now button */
+    .nav-links a {
+        font-size: 12px !important;
+        white-space: nowrap; /* Prevents words like 'Book Now' from splitting */
     }
 }
