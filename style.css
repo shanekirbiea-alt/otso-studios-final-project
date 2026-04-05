@@ -499,3 +499,27 @@ input, select, textarea {
         margin-bottom: 5px;
     }
 }
+
+@media screen and (max-width: 600px) {
+    .navbar {
+        flex-direction: column !important; /* Stack logo on top of links */
+        padding: 15px 0 !important;
+        height: auto !important;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center !important;
+        padding: 10px 0;
+        gap: 10px !important;
+    }
+
+    .nav-links li a {
+        font-size: 11px !important; /* Make text smaller to fit */
+        padding: 5px !important;
+    }
+
+    .nav-cta {
+        margin-bottom: 10px; /* Space out the Book Now button */
+    }
+}
