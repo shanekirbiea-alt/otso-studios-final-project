@@ -90,26 +90,32 @@ const initReviews = () => {
     if (!display) return;
 
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
+    
+    // Check your Firebase Data tab: is the field called 'timestamp' or 'createdAt'?
+    // Update 'timestamp' below to match what you see in the Firebase Console
     const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
     onSnapshot(q, (querySnapshot) => {
-        display.innerHTML = ""; // Clear current local view
+        display.innerHTML = ""; 
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            const stars = '★'.repeat(data.rating) + '☆'.repeat(5 - data.rating);
+            // Ensure data.rating exists to prevent errors
+            const ratingValue = data.rating || 0;
+            const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
             
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
             reviewCard.innerHTML = `
                 <div class="stars">${stars}</div>
-                <p>"${data.text}"</p>
-                <cite>— ${data.name}</cite>
+                <p>"${data.text || ''}"</p>
+                <cite>— ${data.name || 'Anonymous'}</cite>
             `;
             display.appendChild(reviewCard);
         });
+    }, (error) => {
+        console.error("Listener failed:", error);
     });
 };
-
 // Initialize review listener
 initReviews();
