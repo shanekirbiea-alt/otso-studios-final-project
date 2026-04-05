@@ -1,0 +1,468 @@
+/* --- 1. CORE VARIABLES & RESET --- */
+:root {
+    --primary: #1A1A1A; /* Deep Charcoal */
+    --bg: #FBFBFB;      /* Gallery White */
+    --accent: #C5A059;  /* Muted Gold */
+    --text: #333;
+}
+
+/* --- Preloader Styles --- */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary); /* Deep Charcoal #1A1A1A */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1); /* Cinematic slide */
+}
+
+.loader-content {
+    text-align: center;
+    color: var(--bg); /* Gallery White #FBFBFB */
+}
+
+.loader-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealText 1s forwards 0.5s;
+}
+
+.loader-line {
+    width: 0;
+    height: 2px;
+    background-color: var(--accent); /* Muted Gold #C5A059 */
+    margin: 0 auto;
+    animation: growLine 1s forwards 0.3s;
+}
+
+/* Slide Up Effect when finished */
+#loader.loaded {
+    transform: translateY(-100%);
+}
+
+/* Animations */
+@keyframes revealText {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes growLine {
+    to {
+        width: 100px;
+    }
+}
+
+/* Prevent scrolling while loading */
+body.loading {
+    overflow: hidden;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    background-color: var(--bg); 
+    color: var(--primary); 
+    font-family: 'Montserrat', sans-serif; 
+    line-height: 1.8;
+    overflow-x: hidden;
+    padding-top: 80px; /* Fix: Space for the fixed navbar */
+}
+
+/* --- 2. TYPOGRAPHY & LAYOUT --- */
+h1, h2, h3, .logo { 
+    font-family: 'Playfair Display', serif; 
+    font-weight: 700; 
+}
+
+/* Global Section Spacing (Fixes "No Top Spacing") */
+section, .section {
+    padding: 100px 5% !important; /* Fix: Standardizes breathing room for all titles */
+    clear: both;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* --- 3. NAVIGATION --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: #1a1a1a;
+    color: #fff;
+    position: fixed; /* Keep fixed to top */
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-links { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+    align-items: center; 
+}
+
+.nav-links a { 
+    text-decoration: none; 
+    color: white; 
+    font-size: 0.9rem; 
+    letter-spacing: 1px; 
+}
+
+.nav-cta { 
+    color: var(--accent) !important; 
+    font-weight: 600; 
+    border-bottom: 1px solid var(--accent); 
+}
+
+/* --- 4. HERO SECTION --- */
+.hero {
+    height: calc(100vh - 80px); /* Adjust for navbar height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 5%;
+}
+
+.hero h1 { 
+    font-size: clamp(2.5rem, 6vw, 5rem); 
+    line-height: 1.1; 
+    margin-bottom: 2rem; 
+}
+
+.sub-heading { 
+    text-transform: uppercase; 
+    letter-spacing: 4px; 
+    font-size: 0.8rem; 
+    display: block; 
+    margin-bottom: 1rem; 
+    color: var(--accent);
+}
+
+/* --- 5. SERVICES & EDITORIAL --- */
+.services-editorial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+.service-focus {
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.4s ease;
+}
+
+.service-focus:hover {
+    border-color: var(--accent);
+    transform: translateY(-10px);
+}
+
+.service-number {
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.service-list {
+    list-style: none;
+    margin: 25px 0;
+    padding-left: 0;
+}
+
+.service-list li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.service-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+.service-link {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 5px;
+}
+
+/* --- 6. PORTFOLIO GRID --- */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+}
+
+.portfolio-item { 
+    background: #eee; 
+    aspect-ratio: 4/5; 
+    overflow: hidden; 
+}
+
+.portfolio-item img, .portfolio-item video { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.8s ease; 
+}
+
+/* Work Gallery Grid */
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns like the inspiration */
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.work-item {
+    position: relative;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+/* Creating the staggered effect */
+.work-item.tall {
+    grid-row: span 2;
+}
+
+.work-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.work-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Text Overlay that appears on hover */
+.work-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.work-overlay span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.work-overlay h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-top: 10px;
+}
+
+/* Hover States */
+.work-item:hover img {
+    transform: scale(1.05);
+}
+
+.work-item:hover .work-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+    .work-grid {
+        grid-template-columns: 1fr; /* Stack on mobile */
+        gap: 20px;
+    }
+    .work-item.tall {
+        grid-row: span 1;
+    }
+}
+
+.portfolio-item:hover img { 
+    transform: scale(1.05); 
+}
+
+/* Make looping videos fit perfectly in the grid */
+.work-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the video fills the 'tall' or 'standard' slot */
+    display: block;
+}
+
+/* Ensure the overlay still works on top of the video */
+.work-item.video-item .work-image-wrapper {
+    height: 100%;
+}
+
+/* --- FAQ Section Styling (Screenshot Match) --- */
+#faq {
+    background-color: var(--primary) !important; /* Fix: Deep Charcoal Background */
+    color: var(--bg) !important; /* Fix: Gallery White Text */
+    padding: 120px 5% !important; /* Adjust padding for better section breakup */
+}
+
+/* Category Title styling */
+.faq-category-title {
+    color: var(--accent); /* Muted Gold #C5A059 */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333; /* Fix: Thin Dark Horizontal Line */
+    text-align: left; /* Aligns left as per screenshot */
+}
+
+/* Question styling */
+summary {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    cursor: pointer;
+    list-style: none; /* Removes default arrow */
+    position: relative;
+    padding-right: 30px;
+}
+
+/* Custom '+' and '-' arrows for high-end look */
+summary::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    color: var(--accent);
+    font-family: 'Montserrat', sans-serif;
+}
+
+details[open] summary::after {
+    content: '−';
+}
+
+/* Line separating individual questions */
+details {
+    border-bottom: 1px solid #333; /* Fix: Thin Dark Horizontal Line */
+    padding: 20px 0;
+    transition: all 0.3s ease;
+}
+
+details:hover {
+    padding-left: 10px;
+}
+
+/* Answers text styling */
+details p {
+    font-family: 'Montserrat', sans-serif;
+    color: #bcbcbc; /* Lighter grey for answer body */
+    font-size: 0.95rem;
+    padding-top: 20px;
+    line-height: 1.8;
+}
+
+/* Bold text inside the answers */
+details strong {
+    color: var(--bg);
+}
+
+/* --- 8. CLIENT REVIEWS --- */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.review-card {
+    padding: 30px;
+    border: 1px solid #eee;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+
+.stars { color: var(--accent); margin-bottom: 15px; }
+
+/* --- 9. FORMS & BUTTONS --- */
+input, select, textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+}
+
+.form-group-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    min-width: 250px;
+}
+
+/* --- 10. RESPONSIVE DESIGN --- */
+@media (max-width: 900px) {
+    .services-editorial-grid, .form-group-row {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    section { padding: 60px 5% !important; }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
