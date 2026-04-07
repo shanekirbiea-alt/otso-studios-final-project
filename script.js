@@ -1,233 +1,412 @@
-/** * OTSO STUDIOS - CORE SCRIPT
-
- * Integrated with Firebase Firestore
-
- */
-
-
-
-// 1. PRELOADER LOGIC
-
-window.addEventListener('load', () => {
-
-    const loader = document.getElementById('loader');
-
-    const body = document.body;
-
-
-
-    body.classList.add('loading');
-
-
-
-    setTimeout(() => {
-
-        if (loader) loader.classList.add('loaded');
-
-        body.classList.remove('loading');
-
-    }, 2500); 
-
-});
-
-
-
-// 2. SMOOTH SCROLLING
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-    anchor.addEventListener('click', function (e) {
-
-        e.preventDefault();
-
-        const target = document.querySelector(this.getAttribute('href'));
-
-        if (target) {
-
-            target.scrollIntoView({ behavior: 'smooth' });
-
-        }
-
-    });
-
-});
-
-
-
-// 3. FAQ ACCORDION BEHAVIOR
-
-const details = document.querySelectorAll("details");
-
-details.forEach((targetDetail) => {
-
-    targetDetail.addEventListener("click", () => {
-
-        details.forEach((detail) => {
-
-            if (detail !== targetDetail) {
-
-                detail.removeAttribute("open");
-
-            }
-
-        });
-
-    });
-
-});
-
-
-
-// 4. DATABASE: BOOKING INQUIRIES
-
-document.getElementById('bookingForm')?.addEventListener('submit', async function(e) {
-
-    e.preventDefault();
-
-
-
-    // Access Firebase functions exposed in index.html
-
-    const { addDoc, collection, serverTimestamp } = window.dbFunctions;
-
-
-
-    const inquiryData = {
-
-        name: document.getElementById('name').value,
-
-        email: document.getElementById('email').value,
-
-        date: document.getElementById('eventDate').value,
-
-        type: document.getElementById('eventType').value,
-
-        message: document.getElementById('message').value,
-
-        timestamp: serverTimestamp()
-
-    };
-
-
-
-    try {
-
-        await addDoc(collection(window.db, "inquiries"), inquiryData);
-
-        alert(`Thank you, ${inquiryData.name}! Your inquiry has been saved to our database.`);
-
-        this.reset();
-
-    } catch (error) {
-
-        console.error("Database Error:", error);
-
-        alert("Failed to save inquiry. Please try again.");
-
+/* --- 1. CORE VARIABLES & RESET --- */
+:root {
+    --primary: #1A1A1A; /* Deep Charcoal */
+    --bg: #FBFBFB;      /* Gallery White */
+    --accent: #C5A059;  /* Muted Gold */
+    --text: #333;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    background-color: var(--bg); 
+    color: var(--primary); 
+    font-family: 'Montserrat', sans-serif; 
+    line-height: 1.8;
+    overflow-x: hidden;
+    padding-top: 80px; 
+}
+
+body.loading {
+    overflow: hidden;
+}
+
+/* --- PRELOADER --- */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.loader-content {
+    text-align: center;
+    color: var(--bg);
+}
+
+.loader-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealText 1s forwards 0.5s;
+}
+
+.loader-line {
+    width: 0;
+    height: 2px;
+    background-color: var(--accent);
+    margin: 0 auto;
+    animation: growLine 1s forwards 0.3s;
+}
+
+#loader.loaded {
+    transform: translateY(-100%);
+}
+
+@keyframes revealText { to { opacity: 1; transform: translateY(0); } }
+@keyframes growLine { to { width: 100px; } }
+
+/* --- 2. TYPOGRAPHY & LAYOUT --- */
+h1, h2, h3, .logo { 
+    font-family: 'Playfair Display', serif; 
+    font-weight: 700; 
+}
+
+section, .section {
+    padding: 100px 5% !important;
+    clear: both;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* --- 3. NAVIGATION --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: #1a1a1a;
+    color: #fff;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-links { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+    align-items: center; 
+}
+
+.nav-links a { 
+    text-decoration: none; 
+    color: white; 
+    font-size: 0.9rem; 
+    letter-spacing: 1px; 
+}
+
+.nav-cta { 
+    color: var(--accent) !important; 
+    font-weight: 600; 
+    border-bottom: 1px solid var(--accent);
+    white-space: nowrap;
+}
+
+/* --- 4. HERO SECTION --- */
+.hero {
+    height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 5%;
+}
+
+.hero h1 { 
+    font-size: clamp(2.5rem, 6vw, 5rem); 
+    line-height: 1.1; 
+    margin-bottom: 2rem; 
+}
+
+.sub-heading { 
+    text-transform: uppercase; 
+    letter-spacing: 4px; 
+    font-size: 0.8rem; 
+    display: block; 
+    margin-bottom: 1rem; 
+    color: var(--accent);
+}
+
+/* --- 5. SERVICES --- */
+.services-editorial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+.service-focus {
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.4s ease;
+}
+
+.service-focus:hover {
+    border-color: var(--accent);
+    transform: translateY(-10px);
+}
+
+.service-number {
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.service-list {
+    list-style: none;
+    margin: 25px 0;
+    padding-left: 0;
+}
+
+.service-list li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.service-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+.service-link {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 5px;
+}
+
+/* --- 6. PORTFOLIO GRID --- */
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.work-item {
+    position: relative;
+    overflow: hidden;
+    background: transparent !important;
+    height: auto !important;
+}
+
+.work-item.tall { grid-row: span 2; }
+
+.work-image-wrapper { 
+    position: relative; 
+    width: 100%; 
+    height: auto !important; 
+}
+
+.work-item img, .work-item video {
+    width: 100%;
+    height: auto !important;
+    object-fit: cover;
+    display: block;
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.work-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.work-overlay span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.work-overlay h3 { font-size: 1.8rem; margin-top: 10px; }
+
+.work-item:hover img, .work-item:hover video { transform: scale(1.05); }
+.work-item:hover .work-overlay { opacity: 1; transform: translateY(0); }
+
+/* --- 7. FAQ SECTION --- */
+#faq {
+    background-color: var(--primary) !important;
+    color: var(--bg) !important;
+    padding: 120px 5% !important;
+}
+
+.faq-category-title {
+    color: var(--accent);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+
+summary {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: 30px;
+}
+
+summary::after { content: '+'; position: absolute; right: 0; color: var(--accent); }
+details[open] summary::after { content: '−'; }
+
+details { border-bottom: 1px solid #333; padding: 20px 0; transition: all 0.3s ease; }
+details:hover { padding-left: 10px; }
+details p { color: #bcbcbc; font-size: 0.95rem; padding-top: 20px; }
+details strong { color: var(--bg); }
+
+/* --- 8. REVIEWS --- */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.review-card { padding: 30px; border: 1px solid #eee; background: #fff; }
+.stars { color: var(--accent); margin-bottom: 15px; }
+
+/* --- 9. FORMS & BUTTONS --- */
+input, select, textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-group-row { display: flex; gap: 20px; margin-bottom: 20px; }
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+/* --- 10. RESPONSIVE DESIGN --- */
+
+/* Tablet Optimization */
+@media (max-width: 900px) {
+    .services-editorial-grid, .form-group-row {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    section { padding: 60px 5% !important; }
+}
+
+/* Portrait Mobile Optimization */
+@media screen and (max-width: 600px) {
+    .navbar {
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 15px 0 !important;
+        text-align: center;
     }
 
-});
-
-
-
-// 5. DATABASE: REAL-TIME REVIEWS
-
-document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
-
-    e.preventDefault();
-
-    const { addDoc, collection, serverTimestamp } = window.dbFunctions;
-
-
-
-    const reviewData = {
-
-        name: document.getElementById('reviewerName').value,
-
-        rating: parseInt(document.getElementById('rating').value),
-
-        text: document.getElementById('reviewText').value,
-
-        timestamp: serverTimestamp()
-
-    };
-
-
-
-    try {
-
-        await addDoc(collection(window.db, "reviews"), reviewData);
-
-        this.reset();
-
-    } catch (error) {
-
-        console.error("Error adding review:", error);
-
+    .logo {
+        margin-bottom: 10px;
     }
 
-});
+    .nav-links {
+        display: flex !important;
+        flex-wrap: wrap !important; 
+        justify-content: center !important;
+        gap: 12px !important;
+        padding: 0 10px !important;
+        width: 100%;
+    }
 
+    .nav-links a {
+        font-size: 12px !important;
+        padding: 5px !important;
+        display: inline-block !important; 
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 
-
-// Real-Time Listener to Display Reviews
-
-const initReviews = () => {
-
-    const display = document.getElementById('reviewsDisplay');
-
-    if (!display) return;
-
-
-
-    const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
-
+    .work-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
     
+    .work-item.tall { grid-row: span 1; }
+}
 
-    // Check your Firebase Data tab: is the field called 'timestamp' or 'createdAt'?
+/* FORCE MEDIA TO FIT MOBILE SCREENS */
+video, img, .video-container, .photo-container {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto; 
+}
 
-    // Update 'timestamp' below to match what you see in the Firebase Console
+/* Fix for specific sections */
+#film-reel, #selected-photography {
+    width: 100% !important;
+    padding: 20px !important;
+    overflow-x: hidden !important;
+}
 
-    const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
+.work-item, 
+.work-image-wrapper, 
+#film-reel video, 
+#selected-photography img {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+}
 
-
-
-    onSnapshot(q, (querySnapshot) => {
-
-        display.innerHTML = ""; 
-
-
-
-        querySnapshot.forEach((doc) => {
-
-            const data = doc.data();
-
-            // Ensure data.rating exists to prevent errors
-
-            const ratingValue = data.rating || 0;
-
-            const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
-
-            
-
-            const reviewCard = document.createElement('div');
-
-            reviewCard.className = 'review-card';
-
-            reviewCard.innerHTML = `
-
-                <div class="stars">${stars}</div>
-
-                <p>"${data.text || ''}"</p>
-                <cite>— ${data.name || 'Anonymous'}</cite>`;
-            display.appendChild(reviewCard);
-        });
-    }, (error) => {
-        console.error("Listener failed:", error);
-    });
-
-};
-
-// Initialize review listener
-
-initReviews();
+.work-grid {
+    grid-auto-rows: min-content !important;
+}
