@@ -396,3 +396,18 @@ video, img, .video-container, .photo-container {
     padding: 20px !important;
     overflow-x: hidden !important;
 }
+
+/* FORCE RESET FOR PORTFOLIO ITEMS */
+.work-item, 
+.work-image-wrapper, 
+#film-reel video, 
+#selected-photography img {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+}
+
+.work-grid {
+    grid-auto-rows: min-content !important;
+}
