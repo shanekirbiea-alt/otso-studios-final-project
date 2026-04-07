@@ -1,22 +1,6 @@
 /** * OTSO STUDIOS - CORE SCRIPT
  * Integrated with Firebase Firestore
  */
-
-// 1. PRELOADER LOGIC - Optimized to not get stuck
-document.addEventListener('DOMContentLoaded', () => {
-    const loader = document.getElementById('loader');
-    const body = document.body;
-
-    body.classList.add('loading');
-
-    // This ensures the logo clears even if videos are still downloading in the background
-    setTimeout(() => {
-        if (loader) {
-            loader.classList.add('loaded');
-            body.classList.remove('loading');
-        }
-    }, 2500); // Keeps your original 2.5 second cinematic delay
-});
 // 2. SMOOTH SCROLLING
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
