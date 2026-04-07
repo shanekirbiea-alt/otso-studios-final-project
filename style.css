@@ -124,7 +124,7 @@ section, .section {
     color: var(--accent) !important; 
     font-weight: 600; 
     border-bottom: 1px solid var(--accent);
-    white-space: nowrap; /* Fix: Keeps 'Book Now' on one line */
+    white-space: nowrap; 
 }
 
 /* --- 4. HERO SECTION --- */
@@ -209,19 +209,21 @@ section, .section {
     padding-bottom: 5px;
 }
 
-/* --- 6. PORTFOLIO GRID --- */
+/* --- 6. PORTFOLIO GRID (THE FIX) --- */
 .work-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
     margin-top: 50px;
+    grid-auto-rows: min-content !important; /* Forces rows to shrink to content */
 }
 
 .work-item {
     position: relative;
     overflow: hidden;
-    background: transparent !important; /* Fix: Removes grey peek-through */
-    height: auto !important;           /* Fix: Removes empty space below images */
+    background: transparent !important; /* No grey background peek-through */
+    height: auto !important;           /* Allows container to collapse to image height */
+    display: block;
 }
 
 .work-item.tall { grid-row: span 2; }
@@ -229,12 +231,12 @@ section, .section {
 .work-image-wrapper { 
     position: relative; 
     width: 100%; 
-    height: auto !important; /* Fix: Forces wrapper to match image height */
+    height: auto !important; 
 }
 
 .work-item img, .work-item video {
     width: 100%;
-    height: auto !important; /* Fix: Prevents distortion and gaps */
+    height: auto !important; /* Prevents stretching and empty space */
     object-fit: cover;
     display: block;
     transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
@@ -242,9 +244,7 @@ section, .section {
 
 .work-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    bottom: 0; left: 0; width: 100%;
     padding: 40px;
     background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
     color: white;
@@ -282,7 +282,6 @@ section, .section {
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 1px solid #333;
-    text-align: left;
 }
 
 summary {
@@ -321,8 +320,6 @@ input, select, textarea {
     font-family: 'Montserrat', sans-serif;
 }
 
-.form-group-row { display: flex; gap: 20px; margin-bottom: 20px; }
-
 .btn-primary {
     background: var(--accent);
     color: white;
@@ -333,81 +330,43 @@ input, select, textarea {
     cursor: pointer;
 }
 
-/* --- 10. RESPONSIVE DESIGN --- */
-
-/* Tablet Optimization */
-@media (max-width: 900px) {
-    .services-editorial-grid, .form-group-row {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-    }
-    section { padding: 60px 5% !important; }
-}
-
-/* Portrait Mobile Optimization (Fixes Nav Overlap) */
+/* --- 10. RESPONSIVE DESIGN (THE ULTIMATE MOBILE FIX) --- */
 @media screen and (max-width: 600px) {
+    /* Navbar stack */
     .navbar {
         flex-direction: column !important;
         height: auto !important;
         padding: 15px 0 !important;
-        text-align: center;
-    }
-
-    .logo {
-        margin-bottom: 10px;
     }
 
     .nav-links {
         display: flex !important;
-        flex-wrap: wrap !important; 
+        flex-wrap: wrap !important;
         justify-content: center !important;
         gap: 12px !important;
-        padding: 0 10px !important;
-        width: 100%;
+        padding: 10px !important;
     }
 
-    .nav-links a {
-        font-size: 12px !important;
-        padding: 5px !important;
-        display: inline-block !important; 
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
+    .nav-links a { font-size: 12px !important; }
 
+    /* Single column portfolio */
     .work-grid {
         grid-template-columns: 1fr !important;
-        gap: 20px;
+        gap: 20px !important;
+        grid-auto-rows: auto !important;
     }
-    
-    .work-item.tall { grid-row: span 1; }
-}
 
-/* FORCE MEDIA TO FIT MOBILE SCREENS */
-video, img, .video-container, .photo-container {
-    max-width: 100% !important;
-    height: auto !important;
-    display: block;
-    margin: 0 auto; 
-}
+    .work-item, .work-item.tall {
+        grid-row: span 1 !important;
+        height: auto !important;
+        margin-bottom: 15px;
+    }
 
-/* Fix for the specific 'Selected Photography' and 'Film Reel' sections */
-#film-reel, #selected-photography {
-    width: 100% !important;
-    padding: 20px !important;
-    overflow-x: hidden !important;
-}
+    .work-image-wrapper { height: auto !important; }
 
-/* FORCE RESET FOR PORTFOLIO ITEMS */
-.work-item, 
-.work-image-wrapper, 
-#film-reel video, 
-#selected-photography img {
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    aspect-ratio: auto !important;
-}
-
-.work-grid {
-    grid-auto-rows: min-content !important;
+    /* Fix image/video size on all pages */
+    video, img, .video-container, .photo-container {
+        max-width: 100% !important;
+        height: auto !important;
+    }
 }
