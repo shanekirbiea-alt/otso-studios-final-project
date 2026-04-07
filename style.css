@@ -123,7 +123,8 @@ section, .section {
 .nav-cta { 
     color: var(--accent) !important; 
     font-weight: 600; 
-    border-bottom: 1px solid var(--accent); 
+    border-bottom: 1px solid var(--accent);
+    white-space: nowrap; /* Fix: Keeps 'Book Now' on one line */
 }
 
 /* --- 4. HERO SECTION --- */
@@ -219,16 +220,21 @@ section, .section {
 .work-item {
     position: relative;
     overflow: hidden;
-    background: #f0f0f0;
+    background: transparent !important; /* Fix: Removes grey peek-through */
+    height: auto !important;           /* Fix: Removes empty space below images */
 }
 
 .work-item.tall { grid-row: span 2; }
 
-.work-image-wrapper { position: relative; width: 100%; height: 100%; }
+.work-image-wrapper { 
+    position: relative; 
+    width: 100%; 
+    height: auto !important; /* Fix: Forces wrapper to match image height */
+}
 
 .work-item img, .work-item video {
     width: 100%;
-    height: 100%;
+    height: auto !important; /* Fix: Prevents distortion and gaps */
     object-fit: cover;
     display: block;
     transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
@@ -353,7 +359,7 @@ input, select, textarea {
 
     .nav-links {
         display: flex !important;
-        flex-wrap: wrap !important; /* Forces links to a new line if they don't fit */
+        flex-wrap: wrap !important; 
         justify-content: center !important;
         gap: 12px !important;
         padding: 0 10px !important;
@@ -363,13 +369,13 @@ input, select, textarea {
     .nav-links a {
         font-size: 12px !important;
         padding: 5px !important;
-        display: inline-block !important; /* Ensures FAQ is visible */
+        display: inline-block !important; 
         visibility: visible !important;
         opacity: 1 !important;
     }
 
     .work-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         gap: 20px;
     }
     
@@ -381,7 +387,7 @@ video, img, .video-container, .photo-container {
     max-width: 100% !important;
     height: auto !important;
     display: block;
-    margin: 0 auto; /* Centers them */
+    margin: 0 auto; 
 }
 
 /* Fix for the specific 'Selected Photography' and 'Film Reel' sections */
