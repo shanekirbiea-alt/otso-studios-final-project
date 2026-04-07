@@ -1,6 +1,27 @@
 /** * OTSO STUDIOS - CORE SCRIPT
- * Integrated with Firebase Firestore
+ * Integrated with Firebase Firestore & Fail-Safe Preloader
  */
+
+// 1. FAIL-SAFE PRELOADER LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+    const loader = document.getElementById('loader');
+    const body = document.body;
+
+    // Function to remove loader
+    const removeLoader = () => {
+        if (loader && !loader.classList.contains('loaded')) {
+            loader.classList.add('loaded');
+            body.classList.remove('loading');
+        }
+    };
+
+    // Trigger 1: Force remove after 2.5 seconds (The Cinematic Timing)
+    setTimeout(removeLoader, 2500);
+
+    // Trigger 2: If the whole page happens to finish earlier, allow it to clear
+    window.addEventListener('load', removeLoader);
+});
+
 // 2. SMOOTH SCROLLING
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -27,8 +48,6 @@ details.forEach((targetDetail) => {
 // 4. DATABASE: BOOKING INQUIRIES
 document.getElementById('bookingForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
-
-    // Access Firebase functions exposed in index.html
     const { addDoc, collection, serverTimestamp } = window.dbFunctions;
 
     const inquiryData = {
@@ -42,11 +61,11 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
 
     try {
         await addDoc(collection(window.db, "inquiries"), inquiryData);
-        alert(`Thank you, ${inquiryData.name}! Your inquiry has been saved to our database.`);
+        alert(`Thank you, ${inquiryData.name}! Your inquiry has been saved.`);
         this.reset();
     } catch (error) {
         console.error("Database Error:", error);
-        alert("Failed to save inquiry. Please try again.");
+        alert("Failed to save inquiry.");
     }
 });
 
@@ -70,26 +89,18 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
     }
 });
 
-// Real-Time Listener to Display Reviews
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
-
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
-    
-    // Check your Firebase Data tab: is the field called 'timestamp' or 'createdAt'?
-    // Update 'timestamp' below to match what you see in the Firebase Console
     const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
     onSnapshot(q, (querySnapshot) => {
         display.innerHTML = ""; 
-
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            // Ensure data.rating exists to prevent errors
             const ratingValue = data.rating || 0;
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
-            
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
             reviewCard.innerHTML = `
@@ -103,5 +114,5 @@ const initReviews = () => {
         console.error("Listener failed:", error);
     });
 };
-// Initialize review listener
+
 initReviews();
