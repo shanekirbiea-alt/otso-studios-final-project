@@ -375,3 +375,18 @@ input, select, textarea {
     
     .work-item.tall { grid-row: span 1; }
 }
+
+/* FORCE MEDIA TO FIT MOBILE SCREENS */
+video, img, .video-container, .photo-container {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto; /* Centers them */
+}
+
+/* Fix for the specific 'Selected Photography' and 'Film Reel' sections */
+#film-reel, #selected-photography {
+    width: 100% !important;
+    padding: 20px !important;
+    overflow-x: hidden !important;
+}
