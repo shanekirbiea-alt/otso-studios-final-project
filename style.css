@@ -488,3 +488,62 @@ video, img, .video-container, .photo-container {
 .work-grid {
     grid-auto-rows: min-content !important;
 }
+
+/* --- FIXED LAYOUT REPAIR --- */
+
+/* Ensures the contact section uses the editorial grid */
+#contact .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+/* Fixes the Forms (Inquiry & Reviews) */
+#bookingForm, #reviewForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px; /* Keeps forms from stretching too wide */
+}
+
+/* Fixes input sizing that got squashed */
+.form-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+input, select, textarea {
+    width: 100% !important;
+    padding: 12px !important;
+    border: 1px solid #ddd !important;
+    font-family: 'Montserrat', sans-serif;
+    background: #fff;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Button Styling */
+.btn-primary, button[type="submit"] {
+    background: var(--accent) !important;
+    color: white !important;
+    padding: 15px 30px !important;
+    border: none !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    width: fit-content;
+}
+
+/* Ensure the Review Display is below the form */
+#reviewsDisplay {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
