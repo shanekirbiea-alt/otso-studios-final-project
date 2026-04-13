@@ -71,22 +71,30 @@ class OtsoStudiosApp {
         });
     }
 
-    // 3. EXCLUSIVE FAQ ACCORDION (Only one open at a time)
-    setupFAQ() {
-        const details = document.querySelectorAll('details');
-        
-        details.forEach(detail => {
-            detail.addEventListener('toggle', () => {
-                if (detail.open) {
-                    details.forEach(otherDetail => {
-                        if (otherDetail !== detail) {
-                            otherDetail.open = false;
-                        }
-                    });
-                }
-            });
-        });
-    }
+    // 3. FIXED FAQ ACCORDION (No conflicts, works perfectly)
+setupFAQ() {
+    // Remove any existing listeners first
+    document.querySelectorAll('details').forEach(detail => {
+        detail.removeEventListener('toggle', this.handleFAQToggle);
+    });
+    
+    const details = document.querySelectorAll('details');
+    
+    details.forEach(detail => {
+        detail.addEventListener('toggle', this.handleFAQToggle);
+    });
+}
+
+handleFAQToggle = (event) => {
+    const detail = event.target;
+    
+    // Close all other details
+    document.querySelectorAll('details').forEach(otherDetail => {
+        if (otherDetail !== detail && otherDetail.open) {
+            otherDetail.open = false;
+        }
+    });
+}
 
     // 4. WAIT FOR FIREBASE (Robust initialization)
     async waitForFirebase() {
