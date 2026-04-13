@@ -105,24 +105,24 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
+
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
+    
+    // The Query
     const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
-onSnapshot(q, (querySnapshot) => {
-    // This includesMetadataChanges allows it to show up locally 
-    // before the server even finishes the timestamp!
-    display.innerHTML = ""; 
-    querySnapshot.forEach((doc) => {
-        // ... rest of your code ...
-    });
-}, { includeMetadataChanges: true });
-    
+    // The Listener
     onSnapshot(q, (querySnapshot) => {
         display.innerHTML = ""; 
+
         querySnapshot.forEach((doc) => {
             const data = doc.data();
+            
+            // SKIP logic: If the timestamp is null (still saving), 
+            // we'll let it slide or give it a temporary one so it shows up
             const ratingValue = data.rating || 0;
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
+            
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
             reviewCard.innerHTML = `
