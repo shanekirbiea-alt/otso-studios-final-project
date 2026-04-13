@@ -101,33 +101,35 @@ const initReviews = () => {
 
     const { collection, onSnapshot } = window.dbFunctions;
     
-    // We get the collection without a complex query to avoid Indexing errors
+    // 1. SIMPLE COLLECTION REFERENCE
+    // Removing 'query' and 'orderBy' here stops Firebase from crashing if an index isn't set up.
     const colRef = collection(window.db, "reviews");
 
     onSnapshot(colRef, (querySnapshot) => {
+        console.log("Data received from Firebase!"); // Check your F12 console for this
         display.innerHTML = ""; 
 
-        // Convert snapshots to an array so we can sort them manually
+        // 2. CONVERT TO ARRAY
         const reviewsArray = [];
         querySnapshot.forEach((doc) => {
             reviewsArray.push({ id: doc.id, ...doc.data() });
         });
 
-        // Sort: Newest first (handles the null timestamp during initial save)
+        // 3. MANUAL SORT (Newest First)
+        // This handles the "null" timestamp issue that happens right when you click post.
         reviewsArray.sort((a, b) => {
-            const timeA = a.timestamp?.seconds || Date.now();
-            const timeB = b.timestamp?.seconds || Date.now();
+            const timeA = a.timestamp?.toMillis() || Date.now();
+            const timeB = b.timestamp?.toMillis() || Date.now();
             return timeB - timeA;
         });
 
+        // 4. RENDER TO PAGE
         reviewsArray.forEach((data) => {
             const ratingValue = data.rating || 0;
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
             
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
-            
-            // Matches the visual style of your video: Quoted text and Uppercase name
             reviewCard.innerHTML = `
                 <div class="stars">${stars}</div>
                 <p>"${data.text || ''}"</p>
@@ -136,7 +138,9 @@ const initReviews = () => {
             display.appendChild(reviewCard);
         });
     }, (error) => {
-        console.error("Listener failed:", error);
+        // This will tell us EXACTLY why it's failing
+        console.error("Firebase Listener Error:", error);
+        alert("Display Error: Check console (F12) for details.");
     });
 };
 
