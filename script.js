@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const body = document.body;
 
+    // Function to remove loader
     const removeLoader = () => {
         if (loader && !loader.classList.contains('loaded')) {
             loader.classList.add('loaded');
@@ -14,7 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Trigger 1: Force remove after 2.5 seconds (The Cinematic Timing)
     setTimeout(removeLoader, 2500);
+
+    // Trigger 2: If the whole page happens to finish earlier, allow it to clear
     window.addEventListener('load', removeLoader);
 });
 
@@ -65,15 +69,9 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
     }
 });
 
-// 5. DATABASE: REAL-TIME REVIEWS (UPGRADED)
+// 5. DATABASE: REAL-TIME REVIEWS
 document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
-    
-    if (!window.dbFunctions || !window.db) {
-        console.error("Firebase not initialized yet!");
-        return;
-    }
-
     const { addDoc, collection, serverTimestamp } = window.dbFunctions;
 
     const reviewData = {
@@ -84,63 +82,36 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
     };
 
     try {
-        const docRef = await addDoc(collection(window.db, "reviews"), reviewData);
-        if (docRef.id) {
-            alert("Thank you for your feedback! Your review is now live.");
-            this.reset();
-        }
+        await addDoc(collection(window.db, "reviews"), reviewData);
+        this.reset();
     } catch (error) {
         console.error("Error adding review:", error);
-        alert("Something went wrong. Please try again!");
     }
 });
 
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
+    const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
+    const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
-    const { collection, onSnapshot } = window.dbFunctions;
-    
-    // 1. SIMPLE COLLECTION REFERENCE
-    // Removing 'query' and 'orderBy' here stops Firebase from crashing if an index isn't set up.
-    const colRef = collection(window.db, "reviews");
-
-    onSnapshot(colRef, (querySnapshot) => {
-        console.log("Data received from Firebase!"); // Check your F12 console for this
+    onSnapshot(q, (querySnapshot) => {
         display.innerHTML = ""; 
-
-        // 2. CONVERT TO ARRAY
-        const reviewsArray = [];
         querySnapshot.forEach((doc) => {
-            reviewsArray.push({ id: doc.id, ...doc.data() });
-        });
-
-        // 3. MANUAL SORT (Newest First)
-        // This handles the "null" timestamp issue that happens right when you click post.
-        reviewsArray.sort((a, b) => {
-            const timeA = a.timestamp?.toMillis() || Date.now();
-            const timeB = b.timestamp?.toMillis() || Date.now();
-            return timeB - timeA;
-        });
-
-        // 4. RENDER TO PAGE
-        reviewsArray.forEach((data) => {
+            const data = doc.data();
             const ratingValue = data.rating || 0;
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
-            
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
             reviewCard.innerHTML = `
                 <div class="stars">${stars}</div>
                 <p>"${data.text || ''}"</p>
-                <cite>— ${data.name ? data.name.toUpperCase() : 'ANONYMOUS'}</cite>
+                <cite>— ${data.name || 'Anonymous'}</cite>
             `;
             display.appendChild(reviewCard);
         });
     }, (error) => {
-        // This will tell us EXACTLY why it's failing
-        console.error("Firebase Listener Error:", error);
-        alert("Display Error: Check console (F12) for details.");
+        console.error("Listener failed:", error);
     });
 };
 
