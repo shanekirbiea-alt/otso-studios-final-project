@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const body = document.body;
 
-    // Function to remove loader
     const removeLoader = () => {
         if (loader && !loader.classList.contains('loaded')) {
             loader.classList.add('loaded');
@@ -15,10 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Trigger 1: Force remove after 2.5 seconds (The Cinematic Timing)
     setTimeout(removeLoader, 2500);
-
-    // Trigger 2: If the whole page happens to finish earlier, allow it to clear
     window.addEventListener('load', removeLoader);
 });
 
@@ -69,11 +65,10 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
     }
 });
 
-// 5. DATABASE: REAL-TIME REVIEWS (REPAIRED)
+// 5. DATABASE: REAL-TIME REVIEWS (UPGRADED)
 document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    // Check if Firebase is actually ready
     if (!window.dbFunctions || !window.db) {
         console.error("Firebase not initialized yet!");
         return;
@@ -89,11 +84,8 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
     };
 
     try {
-        console.log("Sending to Firebase...");
         const docRef = await addDoc(collection(window.db, "reviews"), reviewData);
-        
         if (docRef.id) {
-            console.log("Success! ID:", docRef.id);
             alert("Thank you for your feedback! Your review is now live.");
             this.reset();
         }
@@ -102,33 +94,44 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
         alert("Something went wrong. Please try again!");
     }
 });
+
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
 
-    const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
+    const { collection, onSnapshot } = window.dbFunctions;
     
-    // The Query
-    const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
+    // We get the collection without a complex query to avoid Indexing errors
+    const colRef = collection(window.db, "reviews");
 
-    // The Listener
-    onSnapshot(q, (querySnapshot) => {
+    onSnapshot(colRef, (querySnapshot) => {
         display.innerHTML = ""; 
 
+        // Convert snapshots to an array so we can sort them manually
+        const reviewsArray = [];
         querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            
-            // SKIP logic: If the timestamp is null (still saving), 
-            // we'll let it slide or give it a temporary one so it shows up
+            reviewsArray.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Sort: Newest first (handles the null timestamp during initial save)
+        reviewsArray.sort((a, b) => {
+            const timeA = a.timestamp?.seconds || Date.now();
+            const timeB = b.timestamp?.seconds || Date.now();
+            return timeB - timeA;
+        });
+
+        reviewsArray.forEach((data) => {
             const ratingValue = data.rating || 0;
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
             
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
+            
+            // Matches the visual style of your video: Quoted text and Uppercase name
             reviewCard.innerHTML = `
                 <div class="stars">${stars}</div>
                 <p>"${data.text || ''}"</p>
-                <cite>— ${data.name || 'Anonymous'}</cite>
+                <cite>— ${data.name ? data.name.toUpperCase() : 'ANONYMOUS'}</cite>
             `;
             display.appendChild(reviewCard);
         });
