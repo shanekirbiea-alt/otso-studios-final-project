@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    
     // Trigger 1: Force remove after 2.5 seconds (The Cinematic Timing)
     setTimeout(removeLoader, 2500);
 
