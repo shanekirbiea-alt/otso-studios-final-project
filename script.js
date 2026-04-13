@@ -83,9 +83,14 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
 
     try {
         await addDoc(collection(window.db, "reviews"), reviewData);
+        
+        // Show a quick success toast or alert
+        alert("Thank you for your feedback! Your review is now live.");
+        
         this.reset();
     } catch (error) {
         console.error("Error adding review:", error);
+        alert("Something went wrong. Please try again!");
     }
 });
 
