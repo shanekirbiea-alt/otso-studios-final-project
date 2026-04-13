@@ -69,9 +69,16 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
     }
 });
 
-// 5. DATABASE: REAL-TIME REVIEWS
+// 5. DATABASE: REAL-TIME REVIEWS (REPAIRED)
 document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
+    
+    // Check if Firebase is actually ready
+    if (!window.dbFunctions || !window.db) {
+        console.error("Firebase not initialized yet!");
+        return;
+    }
+
     const { addDoc, collection, serverTimestamp } = window.dbFunctions;
 
     const reviewData = {
@@ -82,24 +89,34 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
     };
 
     try {
-        await addDoc(collection(window.db, "reviews"), reviewData);
+        console.log("Sending to Firebase...");
+        const docRef = await addDoc(collection(window.db, "reviews"), reviewData);
         
-        // Show a quick success toast or alert
-        alert("Thank you for your feedback! Your review is now live.");
-        
-        this.reset();
+        if (docRef.id) {
+            console.log("Success! ID:", docRef.id);
+            alert("Thank you for your feedback! Your review is now live.");
+            this.reset();
+        }
     } catch (error) {
         console.error("Error adding review:", error);
         alert("Something went wrong. Please try again!");
     }
 });
-
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
     const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
+onSnapshot(q, (querySnapshot) => {
+    // This includesMetadataChanges allows it to show up locally 
+    // before the server even finishes the timestamp!
+    display.innerHTML = ""; 
+    querySnapshot.forEach((doc) => {
+        // ... rest of your code ...
+    });
+}, { includeMetadataChanges: true });
+    
     onSnapshot(q, (querySnapshot) => {
         display.innerHTML = ""; 
         querySnapshot.forEach((doc) => {
