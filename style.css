@@ -309,17 +309,69 @@ details:hover { padding-left: 10px; }
 details p { color: #bcbcbc; font-size: 0.95rem; padding-top: 20px; }
 details strong { color: var(--bg); }
 
-/* --- 8. REVIEWS --- */
-.reviews-grid {
+/* --- 8. REVIEWS & DYNAMIC GRID --- */
+
+/* The actual container where JS injects the cards */
+#reviewsDisplay {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
+    margin-top: 40px;
+    align-items: start;
 }
 
-.review-card { padding: 30px; border: 1px solid #eee; background: #fff; }
-.stars { color: var(--accent); margin-bottom: 15px; }
+/* Individual Review Card Styling */
+.review-card { 
+    padding: 40px; 
+    border: 1px solid #eee; 
+    background: #fff;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+}
 
-/* --- 9. FORMS & BUTTONS --- */
+.review-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+}
+
+.stars { 
+    color: var(--accent); 
+    margin-bottom: 20px; 
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.review-card p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: var(--primary);
+}
+
+.review-card cite {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-style: normal;
+}
+
+/* --- 9. ANIMATIONS --- */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
 input, select, textarea {
     width: 100%;
     padding: 15px;
