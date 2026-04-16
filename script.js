@@ -63,40 +63,28 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
     }
 });
 
-// 5. DATABASE: REAL-TIME REVIEWS (Updated)
-document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const { addDoc, collection, serverTimestamp } = window.dbFunctions;
-
-    const reviewData = {
-        name: document.getElementById('reviewerName').value,
-        rating: parseInt(document.getElementById('rating').value),
-        text: document.getElementById('reviewText').value,
-        timestamp: serverTimestamp() // This is critical for the 'orderBy' logic
-    };
-
-    try {
-        await addDoc(collection(window.db, "reviews"), reviewData);
-        alert("Thank you for your feedback!"); // Added the alert seen in your video
-        this.reset();
-    } catch (error) {
-        console.error("Error adding review:", error);
-        alert("Something went wrong. Please check the console.");
-    }
-});
-
+// 5. DATABASE: REAL-TIME REVIEWS
 const initReviews = () => {
     const display = document.getElementById('reviewsDisplay');
     if (!display) return;
+
+    // We pull the tools from the window object where the Firebase script put them
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
+    
+    // Create the query to get reviews sorted by newest first
     const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
 
+    // This listener stays active and updates the page instantly when a new review is added
     onSnapshot(q, (querySnapshot) => {
-        display.innerHTML = ""; 
+        display.innerHTML = ""; // Clear the grid before rebuilding it
+        
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             const ratingValue = data.rating || 0;
+            
+            // Logic to draw the stars based on the number selected
             const stars = '★'.repeat(ratingValue) + '☆'.repeat(5 - ratingValue);
+            
             const reviewCard = document.createElement('div');
             reviewCard.className = 'review-card';
             reviewCard.innerHTML = `
@@ -107,8 +95,39 @@ const initReviews = () => {
             display.appendChild(reviewCard);
         });
     }, (error) => {
-        console.error("Listener failed:", error);
+        console.error("Firebase Listener Error:", error);
     });
 };
+
+// CRITICAL FIX: This waits for the Firebase Module to load before running initReviews
+const checkDB = setInterval(() => {
+    if (window.db && window.dbFunctions) {
+        initReviews();
+        clearInterval(checkDB);
+        console.log("Firebase connected: Reviews initialized.");
+    }
+}, 100);
+
+// Review Form Submission Logic
+document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const { addDoc, collection, serverTimestamp } = window.dbFunctions;
+
+    const reviewData = {
+        name: document.getElementById('reviewerName').value,
+        rating: parseInt(document.getElementById('rating').value),
+        text: document.getElementById('reviewText').value,
+        timestamp: serverTimestamp()
+    };
+
+    try {
+        await addDoc(collection(window.db, "reviews"), reviewData);
+        alert("Thank you for your feedback!");
+        this.reset();
+    } catch (error) {
+        console.error("Error adding review:", error);
+        alert("Failed to post review. Please try again.");
+    }
+});
 
 initReviews();
