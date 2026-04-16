@@ -72,7 +72,7 @@ const initReviews = () => {
     const { collection, onSnapshot, query, orderBy } = window.dbFunctions;
     
     // Create the query to get reviews sorted by newest first
-    const q = query(collection(window.db, "reviews"), orderBy("timestamp", "desc"));
+    const q = query(collection(window.db, "reviews"));
 
     // This listener stays active and updates the page instantly when a new review is added
     onSnapshot(q, (querySnapshot) => {
