@@ -63,7 +63,7 @@ document.getElementById('bookingForm')?.addEventListener('submit', async functio
     }
 });
 
-// 5. DATABASE: REAL-TIME REVIEWS
+// 5. DATABASE: REAL-TIME REVIEWS (Updated)
 document.getElementById('reviewForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     const { addDoc, collection, serverTimestamp } = window.dbFunctions;
@@ -72,14 +72,16 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
         name: document.getElementById('reviewerName').value,
         rating: parseInt(document.getElementById('rating').value),
         text: document.getElementById('reviewText').value,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp() // This is critical for the 'orderBy' logic
     };
 
     try {
         await addDoc(collection(window.db, "reviews"), reviewData);
+        alert("Thank you for your feedback!"); // Added the alert seen in your video
         this.reset();
     } catch (error) {
         console.error("Error adding review:", error);
+        alert("Something went wrong. Please check the console.");
     }
 });
 
