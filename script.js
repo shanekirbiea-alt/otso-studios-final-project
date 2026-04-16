@@ -1,13 +1,8 @@
-/** * OTSO STUDIOS - CORE SCRIPT
- * Integrated with Firebase Firestore & Fail-Safe Preloader
- */
-
 // 1. FAIL-SAFE PRELOADER LOGIC
 document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const body = document.body;
 
-    // Function to remove loader
     const removeLoader = () => {
         if (loader && !loader.classList.contains('loaded')) {
             loader.classList.add('loaded');
@@ -16,10 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     
-    // Trigger 1: Force remove after 2.5 seconds (The Cinematic Timing)
-    setTimeout(removeLoader, 2500);
+  setTimeout(removeLoader, 2500);
 
-    // Trigger 2: If the whole page happens to finish earlier, allow it to clear
     window.addEventListener('load', removeLoader);
 });
 
