@@ -21,7 +21,6 @@ body {
     padding-top: 80px; 
 }
 
-/* --- NEW PRELOADER STYLES --- */
 body.loading {
     overflow: hidden;
 }
@@ -64,7 +63,6 @@ body.loading {
     animation: growLine 0.8s forwards;
 }
 
-/* This class is added by JS to hide the loader */
 #loader.loaded {
     transform: translateY(-100%);
 }
@@ -351,7 +349,6 @@ input, select, textarea {
     section { padding: 60px 5% !important; }
 }
 
-/* Portrait Mobile Optimization */
 @media screen and (max-width: 600px) {
     .navbar {
         flex-direction: column !important;
@@ -389,7 +386,6 @@ input, select, textarea {
     .work-item.tall { grid-row: span 1; }
 }
 
-/* FORCE MEDIA TO FIT MOBILE SCREENS */
 video, img, .video-container, .photo-container {
     max-width: 100% !important;
     height: auto !important;
@@ -397,7 +393,6 @@ video, img, .video-container, .photo-container {
     margin: 0 auto; 
 }
 
-/* Fix for specific sections */
 #film-reel, #selected-photography {
     width: 100% !important;
     padding: 20px !important;
